@@ -95,7 +95,7 @@ public class DBHelper extends SQLiteOpenHelper {
         // Create an ArrayList that holds String objects
         ArrayList<String> tasks = new ArrayList<String>();
         // Select all the tasks' description
-        String selectQuery = "SELECT " + COLUMN_DESCRIPTION
+        String selectQuery = "SELECT " + COLUMN_DESCRIPTION + "," + COLUMN_DATE
                 + " FROM " + TABLE_TASK;
 
         // Get the instance of database to read
@@ -114,7 +114,11 @@ public class DBHelper extends SQLiteOpenHelper {
                 //  column in the Cursor object. getString(1)
                 //  return second column data and so on.
                 //  Use getInt(0) if data is an int
-                tasks.add(cursor.getString(0));
+                String description = cursor.getString(0);
+                String date = cursor.getString(1);
+                String display = description + "\n" + date;
+                tasks.add(display);
+
             } while (cursor.moveToNext());
         }
         // Close connection

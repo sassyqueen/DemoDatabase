@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
                 DBHelper db = new DBHelper(MainActivity.this);
 
                 // Insert a task
-                ArrayList<String> data = db.getTaskContent();
+                ArrayList<Task> data = db.getTasks();
 
                 db.close();
 
@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
                     Log.d("Database Content", i +". "+data.get(i));
                     txt += i + ". " + data.get(i) + "\n";
 
-                    tasks.add(new Task(i, data.get(i), null));
+                    tasks.add(new Task(i, data.get(i).getDescription(), data.get(i).getDate()));
                 }
                 tvResults.setText(txt);
                 aa = new TaskAdapter(MainActivity.this, R.layout.row, tasks);

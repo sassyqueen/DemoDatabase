@@ -49,7 +49,7 @@ public class TaskAdapter extends ArrayAdapter<Task> {
 
         tvDate.setText(currentTask.getDate());
         tvDesc.setText(currentTask.getDescription());
-        tvRefNo.setText(currentTask.getId());
+        tvRefNo.setText("" + (currentTask.getId() + 1));
         // Set the image to star or nostar accordingly
 
         // Return the nicely done up View to the ListView

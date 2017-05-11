@@ -31,12 +31,12 @@ public class DBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String createTableSql = "CREATE TABLE " + TABLE_TASK +  "("
+        String createTableSql = "CREATE TABLE " + TABLE_TASK + "("
                 + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
                 + COLUMN_DATE + " TEXT,"
                 + COLUMN_DESCRIPTION + " TEXT )";
         db.execSQL(createTableSql);
-        Log.i("info" ,"created tables");
+        Log.i("info", "created tables");
     }
 
     @Override
@@ -50,7 +50,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     }
 
-    public void insertTask(String description, String date){
+    public void insertTask(String description, String date) {
         // Get an instance of the database for writing
         SQLiteDatabase db = this.getWritableDatabase();
         // We use ContentValues object to store the values for
@@ -66,15 +66,37 @@ public class DBHelper extends SQLiteOpenHelper {
         db.close();
     }
 
-    public ArrayList<Task> getTaskContent() {
-        // Create an ArrayList that holds String objects
+    public ArrayList<Task> getTasks() {
         ArrayList<Task> tasks = new ArrayList<Task>();
-        // Select all the tasks' description
         String selectQuery = "SELECT " + COLUMN_ID + ", "
                 + COLUMN_DESCRIPTION + ", "
                 + COLUMN_DATE
                 + " FROM " + TABLE_TASK;
 
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                int id = cursor.getInt(0);
+                String description = cursor.getString(1);
+                String date = cursor.getString(2);
+                Task obj = new Task(id, description, date);
+                tasks.add(obj);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        db.close();
+        return tasks;
+
+    }
+
+    public ArrayList<String> getTaskContent() {
+        // Create an ArrayList that holds String objects
+        ArrayList<String> tasks = new ArrayList<String>();
+        // Select all the tasks' description
+        String selectQuery = "SELECT " + COLUMN_DESCRIPTION
+                + " FROM " + TABLE_TASK;
 
         // Get the instance of database to read
         SQLiteDatabase db = this.getReadableDatabase();
@@ -92,13 +114,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 //  column in the Cursor object. getString(1)
                 //  return second column data and so on.
                 //  Use getInt(0) if data is an int
-                int id = cursor.getInt(0);
-                String description = cursor.getString(1);
-                String date = cursor.getString(2);
-                Task obj = new Task(id, description, date);
-                tasks.add(obj);
-
-//                tasks.add(cursor.getString(0));
+                tasks.add(cursor.getString(0));
             } while (cursor.moveToNext());
         }
         // Close connection
@@ -109,6 +125,4 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
 
-
 }
-
